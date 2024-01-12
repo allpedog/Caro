@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <title>CARO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+        }
+
+        .left {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .left img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .right {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .footer h1 {
+            font-size: 50px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+
+        #table {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        tr {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #fff;
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        td:hover {
+            background-color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body">
+        <div class="left">
+            <img src="IMG/unnamed.png" alt="">
+        </div>
+        <div class="footer">
+            <h1>GAME CARO</h1>
+            <div class="button">
+                <button onclick="batDau()" id="btn-play">Bắt đầu</button>
+                <button id="btn-time">00:00:00</button>
+                <button id="btn-player">Người chơi</button>
+            </div>
+            <div id="table"></div>
+        </div>
+        <div class="right">
+            <img src="IMG/unnamed.png" alt="">
+        </div>
+    </div>
+</body>
+<script>
+    let array = new Array(20);
+    let nguoiChoi1 = true;
+    let noiThang = [];
+    let thoiGian;
+
+    function batDau() {
+        noiThang = [];
+        for (let i = 0; i < array.length; i++) {
+            array[i] = new Array(20);
+            for (let j = 0; j < array[i].length; j++) {
+                array[i][j] = ""
+            }
+        }
+        document.getElementById(`btn-play`).innerText = "Chơi lại";
+        tieng = 0;
+        phut = 0;
+        giay = 0;
+        thoiGian = setInterval(function () {
+            updateTimer();
+        }, 25);
+        hienThi();
+
+
+
+    }
+
+    hienThi();
+    function hienThi() {
+        let tableString = `<table>`;
+        for (let i = 0; i < 10; i++) {
+            tableString += `<tr>`;
+            for (let j = 0; j < 10; j++) {
+                if (noiThang.includes(`${i}-${j}`)) {
+                    if (array[i][j] === "X") {
+                        tableString += `<td style ="color:red; background-color:aqua;" onclick="choi(${i},${j})">${array[i][j]}</td>`;
+                    }
+                    else if (array[i][j] === "O") {
+                        tableString += `<td style ="color:red; background-color:aqua;"onclick="choi(${i},${j})">${array[i][j]}</td>`;
+                    }
+                    else {
+                        tableString += `<td onclick="choi(${i},${j})">${array[i][j]}</td>`;
+
+                    }
+                }
+                else {
+                    if (array[i][j] === "X") {
+                        tableString += `<td style ="color:red" onclick="choi(${i},${j})">${array[i][j]}</td>`;
+                    }
+                    else if (array[i][j] === "O") {
+                        tableString += `<td style ="color:blue"onclick="choi(${i},${j})">${array[i][j]}</td>`;
+                    }
+                    else {
+                        tableString += `<td onclick="choi(${i},${j})">${array[i][j]}</td>`;
+
+                    }
+                }
+
+            }
+            tableString += `</tr>`;
+        }
+        tableString += `</table>`;
+        document.getElementById(`table`).innerHTML = tableString;
+        if (nguoiChoi1) {
+            document.getElementById(`btn-player`).innerText = "Đến lượt X";
+        }
+        else {
+            document.getElementById(`btn-player`).innerText = "Đến lượt 0";
+        }
+
+    }
+    function choi(i, j) {
+        if (oTrong(i, j)) {
+            if (nguoiChoi1) {
+                array[i][j] = "X";
+                nguoiChoi1 = false;
+                if (kiemTraThang("X")) {
+                    thongBaoThang('Người chơi 1 thắng');
+                }
+            }
+            else {
+                array[i][j] = "O";
+                nguoiChoi1 = true;
+                if (kiemTraThang("O")) {
+                    thongBaoThang('Người chơi 2 thắng');
+                }
+            }
+        }
+        else {
+            thongBaoTrungNhau("Mù à ??? Đánh ô khác đi !!!");
+        }
+
+        hienThi();
+    }
+    function oTrong(i, j) {
+        return array[i][j] === "";
+    }
+    function kiemTraThang(value) {
+        for (let i = 0; i < array.length; i++) {
+            for (let j = 0; j < array[i].length; j++) {
+                let kiemTraHangNgang = array[i][j] === value && array[i][j + 1] === value && array[i][j + 2] === value && array[i][j + 3] === value && array[i][j + 4] === value;
+                let kiemTraHangDoc = array[i][j] === value && array[i + 1][j] === value && array[i + 2][j] === value && array[i + 3][j] === value && array[i + 4][j] === value;
+                let kiemTraCheoPhai = array[i][j] === value && array[i + 1][j + 1] === value && array[i + 2][j + 2] === value && array[i + 3][j + 3] === value && array[i + 4][j + 4] === value;
+                let kiemTraCheoTrai = array[i][j] === value && array[i + 1][j - 1] === value && array[i + 2][j - 2] === value && array[i + 3][j - 3] === value && array[i + 4][j - 4] === value;
+                if (kiemTraHangNgang) {
+                    noiThang.push(`${i}-${j}`);
+                    noiThang.push(`${i}-${j + 1}`);
+                    noiThang.push(`${i}-${j + 2}`);
+                    noiThang.push(`${i}-${j + 3}`);
+                    noiThang.push(`${i}-${j + 4}`);
+                    // hoặc ghi gộp như => (noiThang.push(`${i}-${j}`, `${i}-${j + 1}`, `${i}-${j + 2}`, `${i}-${j + 3}`, `${i}-${j + 4}`);)
+                    return true;
+                }
+                if (kiemTraHangDoc) {
+                    noiThang.push(`${i}-${j}`);
+                    noiThang.push(`${i + 1}-${j}`);
+                    noiThang.push(`${i + 2}-${j}`);
+                    noiThang.push(`${i + 3}-${j}`);
+                    noiThang.push(`${i + 4}-${j}`);
+                    // hoặc ghi gộp như => (noiThang.push(`${i}-${j}`, `${i + 1}-${j}`, `${i + 2}-${j}`, `${i + 3}-${j}`, `${i + 4}-${j}`);)
+                    return true;
+                }
+                if (kiemTraCheoPhai) {
+                    noiThang.push(`${i}-${j}`);
+                    noiThang.push(`${i + 1}-${j + 1}`);
+                    noiThang.push(`${i + 2}-${j + 2}`);
+                    noiThang.push(`${i + 3}-${j + 3}`);
+                    noiThang.push(`${i + 4}-${j + 4}`);
+                    // hoặc ghi gộp như => (noiThang.push(`${i}-${j}`, `${i + 1}-${j + 1}`, `${i + 2}-${j + 2}`, `${i + 3}-${j + 3}`, `${i + 4}-${j + 4}`);)
+                    return true;
+                }
+                if (kiemTraCheoTrai) {
+                    noiThang.push(`${i}-${j}`);
+                    noiThang.push(`${i + 1}-${j - 1}`);
+                    noiThang.push(`${i + 2}-${j - 2}`);
+                    noiThang.push(`${i + 3}-${j - 3}`);
+                    noiThang.push(`${i + 4}-${j - 4}`);
+                    // hoặc ghi gộp như => (noiThang.push(`${i}-${j}`, `${i + 1}-${j - 1}`, `${i + 2}-${j - 2}`, `${i + 3}-${j - 3}`, `${i + 4}-${j - 4}`);)
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    function updateTimer() {
+    giay++;
+    if (giay == 60) {
+        giay = 0;
+        phut++;
+        if (phut == 60) {
+            phut = 0;
+            tieng++;
+            if (tieng == 3) { // Reset về 0 nếu đã đủ 3 phút
+                tieng = 0;
+            }
+        }
+    }
+    
+    let timeString = `${tieng < 10 ? '0' : ''}${tieng}:${phut < 10 ? '0' : ''}${phut}:${giay < 10 ? '0' : ''}${giay}`;
+    // kiểm tra xem tieng có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+    // kiểm tra xem phut có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+    // kiểm tra xem giay có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+    // Ví dụ: 1:2:3 => 01:02:03
+    // Ví dụ: 10:2:3 => 10:02:03
+    document.getElementById('btn-time').innerText = timeString;
+}
+
+    function thongBaoThang(message) {
+        Swal.fire({
+            title: 'Chúc mừng!',
+            text: message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+    function thongBaoTrungNhau() {
+        Swal.fire({
+            title: 'Mù à ??? Đánh ô khác đi !!!',
+            text: 'Nội dung cảnh báo',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+    }
+
+
+</script>
+
+</html>
