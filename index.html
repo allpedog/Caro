@@ -94,6 +94,59 @@
         td:hover {
             background-color: orange;
         }
+
+        /* Mobile : width < 740px */
+        @media only screen and (max-width: 46.1875em) {
+            .body {
+                flex-direction: column;
+            }
+
+            .left{
+                display: none;
+            }
+
+            .left img,
+            .right img {
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .footer {
+                width: 100%;
+                height: 75%;
+            }
+
+            tr {
+            width: 100%;
+            box-sizing: border-box;
+            }
+            
+        }
+
+        /* Tablet : width >= 740px and width < 1024px */
+        @media only screen and (min-width: 46.1875em) and (max-width: 64em) {
+
+            .left img,
+            .right img {
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .footer {
+                width: 100%;
+            }
+
+            #table {
+                width: 50%;
+                overflow-x: auto;
+            }
+
+
+        }
+
+
+        /* PC : width >= 1024px */
+        /* @media only screen and (min-width: 64em) */
     </style>
 </head>
 
@@ -261,27 +314,27 @@
         return false;
     }
     function updateTimer() {
-    giay++;
-    if (giay == 60) {
-        giay = 0;
-        phut++;
-        if (phut == 60) {
-            phut = 0;
-            tieng++;
-            if (tieng == 3) { // Reset về 0 nếu đã đủ 3 phút
-                tieng = 0;
+        giay++;
+        if (giay == 60) {
+            giay = 0;
+            phut++;
+            if (phut == 60) {
+                phut = 0;
+                tieng++;
+                if (tieng == 3) { // Reset về 0 nếu đã đủ 3 phút
+                    tieng = 0;
+                }
             }
         }
+
+        let timeString = `${tieng < 10 ? '0' : ''}${tieng}:${phut < 10 ? '0' : ''}${phut}:${giay < 10 ? '0' : ''}${giay}`;
+        // kiểm tra xem tieng có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+        // kiểm tra xem phut có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+        // kiểm tra xem giay có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
+        // Ví dụ: 1:2:3 => 01:02:03
+        // Ví dụ: 10:2:3 => 10:02:03
+        document.getElementById('btn-time').innerText = timeString;
     }
-    
-    let timeString = `${tieng < 10 ? '0' : ''}${tieng}:${phut < 10 ? '0' : ''}${phut}:${giay < 10 ? '0' : ''}${giay}`;
-    // kiểm tra xem tieng có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
-    // kiểm tra xem phut có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
-    // kiểm tra xem giay có nhỏ hơn 10 hay không. Nếu có, nó thêm một '0' đằng trước chuỗi; nếu không, nó thêm một chuỗi trống.
-    // Ví dụ: 1:2:3 => 01:02:03
-    // Ví dụ: 10:2:3 => 10:02:03
-    document.getElementById('btn-time').innerText = timeString;
-}
 
     function thongBaoThang(message) {
         Swal.fire({
