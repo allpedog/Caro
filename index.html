@@ -101,26 +101,30 @@
                 flex-direction: column;
             }
 
-            .left{
+            .left {
                 display: none;
             }
 
-            .left img,
             .right img {
                 object-fit: contain;
                 object-position: center;
+                margin-top: -14em;
             }
 
             .footer {
                 width: 100%;
-                height: 75%;
+                height: 80%;
             }
-
-            tr {
-            width: 100%;
-            box-sizing: border-box;
+            .button {
+                justify-content: space-around;
             }
-            
+        }
+        /* Mobile : width <=375px */
+        @media only screen and (max-width: 24em)
+        {
+            .right img {
+                margin-top: -2em;
+            }
         }
 
         /* Tablet : width >= 740px and width < 1024px */
@@ -134,11 +138,8 @@
 
             .footer {
                 width: 100%;
-            }
+                height: 100%;
 
-            #table {
-                width: 50%;
-                overflow-x: auto;
             }
 
 
@@ -198,10 +199,12 @@
 
     hienThi();
     function hienThi() {
+        const rows = window.innerWidth < 740 ? 6 : 10; // Xác định số hàng dựa trên chiều rộng màn hình
+            const columns = window.innerWidth < 740 ? 6 : 10; // Xác định số cột dựa trên chiều rộng màn hình
         let tableString = `<table>`;
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < rows; i++) {
             tableString += `<tr>`;
-            for (let j = 0; j < 10; j++) {
+            for (let j = 0; j < columns; j++) {
                 if (noiThang.includes(`${i}-${j}`)) {
                     if (array[i][j] === "X") {
                         tableString += `<td style ="color:red; background-color:aqua;" onclick="choi(${i},${j})">${array[i][j]}</td>`;
